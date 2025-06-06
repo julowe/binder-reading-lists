@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# hacky way to 'install' fancyhdr
+# BEWARE magic info/paths. They may change with package changes??
+# Why this? Because tlmgr install fancyhdr doesn't work with the old version of texlive that ubuntu provides, it just tells me to update (i.e. reinstall from net) the texlive install first...
+# and Package: texlive-latex-base, Version: 2023.20240207-1, provides fancyhdr version 2021/01/28 v4.0.1, which doesnt' have `\fancyheadwidth`
+cd /tmp
+echo "Downloading fancyhdr..."
+wget https://mirrors.ctan.org/macros/latex/contrib/fancyhdr.zip
+unzip fancyhdr.zip
+cd fancyhdr
+echo "Creating fancyhdr tex files..."
+tex fancyhdr.ins
+mv -f fancyhdr.sty fancyheadings.sty extramarks.sty extramarks-v4.sty /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/
+echo "fancyhdr tex files moved to /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/"
+
+
 # run matplotlib once to generate the font cache
 python -c "import matplotlib as mpl; mpl.use('Agg'); import pylab as plt; fig, ax = plt.subplots(); fig.savefig('test.png')"
 
