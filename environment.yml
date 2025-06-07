@@ -6,5 +6,4 @@ dependencies:
     - setuptools
     - matplotlib
     - jupyterlab
-    - pip:
-      - jupyterlab_latex
+    - jupyterlab_latex
