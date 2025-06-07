@@ -37,7 +37,10 @@ tlmgr info --only-installed
 tlmgr install datetime2 comment cm-super dvipng
 
 # copy in config file which tells the typesetter to run twice (to make table of contents and refs work)
-cp jupyter_notebook_config.py /home/jovyan/.jupyter/
+#cp jupyter_notebook_config.py /home/jovyan/.jupyter/
+stat /home/jovyan/.jupyter/jupyter_notebook_config.py
+echo "c.LatexConfig.run_times = 2" >>/home/jovyan/.jupyter/jupyter_notebook_config.py
+echo "c.LatexConfig.cleanup = False" >>/home/jovyan/.jupyter/jupyter_notebook_config.py
 
 # # this didn't work...
 # # hacky way to 'install' fancyhdr
