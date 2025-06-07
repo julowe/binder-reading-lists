@@ -1,18 +1,48 @@
 #!/bin/bash
 
-# hacky way to 'install' fancyhdr
-# BEWARE magic info/paths. They may change with package changes??
-# Why this? Because tlmgr install fancyhdr doesn't work with the old version of texlive that ubuntu provides, it just tells me to update (i.e. reinstall from net) the texlive install first...
-# and Package: texlive-latex-base, Version: 2023.20240207-1, provides fancyhdr version 2021/01/28 v4.0.1, which doesnt' have `\fancyheadwidth`
+# NOTE: this script is not run as root user
+
+## install texlive manually
+# ok so do I just install the full tex and have it take an hour the first time this builds? How long do images stay around on the server? Will I have to wait an hour every 30 days? 7 days?
+# prob use medium or small scheme, then tlmgr to add anything else I need
+# scheme options are:
+#  a [X] full scheme (everything) 
+#  b [ ] medium scheme (small + more packages and languages) 
+#  c [ ] small scheme (basic + xetex, metapost, a few languages) 
+#  d [ ] basic scheme (plain and latex) 
+#  e [ ] minimal scheme (plain only) 
+#  f [ ] infrastructure-only scheme (no TeX at all) 
+#  g [ ] book publishing scheme (core LaTeX and add-ons) 
+#  h [ ] ConTeXt scheme 
+#  i [ ] GUST TeX Live scheme 
+#  j [ ] teTeX scheme (more than medium, but nowhere near full) 
+#  k [ ] custom selection of collections
+
 cd /tmp
-echo "Downloading fancyhdr..."
-wget https://mirrors.ctan.org/macros/latex/contrib/fancyhdr.zip
-unzip fancyhdr.zip
-cd fancyhdr
-echo "Creating fancyhdr tex files..."
-tex fancyhdr.ins
-mv -f fancyhdr.sty fancyheadings.sty extramarks.sty extramarks-v4.sty /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/
-echo "fancyhdr tex files moved to /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/"
+wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+zcat < install-tl-unx.tar.gz | tar xf -
+cd install-tl-2*
+perl ./install-tl --no-interaction --paper=letter --texdir=/home/jovyan/tex-live --scheme=medium
+export PATH=/home/jovyan/tex-live/bin/x86_64-linux:$PATH
+which xelatex
+which tlmgr
+tlmgr infs
+
+
+# # this didn't work...
+# # hacky way to 'install' fancyhdr
+# # BEWARE magic info/paths. They may change with package changes??
+# # Why this? Because tlmgr install fancyhdr doesn't work with the old version of texlive that ubuntu provides, it just tells me to update (i.e. reinstall from net) the texlive install first...
+# # and Package: texlive-latex-base, Version: 2023.20240207-1, provides fancyhdr version 2021/01/28 v4.0.1, which doesnt' have `\fancyheadwidth`
+# cd /tmp
+# echo "Downloading fancyhdr..."
+# wget https://mirrors.ctan.org/macros/latex/contrib/fancyhdr.zip
+# unzip fancyhdr.zip
+# cd fancyhdr
+# echo "Creating fancyhdr tex files..."
+# tex fancyhdr.ins
+# mv -f fancyhdr.sty fancyheadings.sty extramarks.sty extramarks-v4.sty /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/
+# echo "fancyhdr tex files moved to /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/"
 
 
 # run matplotlib once to generate the font cache
