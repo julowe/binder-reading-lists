@@ -2,6 +2,8 @@
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/julowe/binder-reading-lists/HEAD)
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/julowe/binder-reading-lists/dev)
+
 This repository contains a complete .tex file to make the GI Eastern Classics Reading list.
 It will (soon?) contain some code to make a reading list from a .xlsx file
 
