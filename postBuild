@@ -8,30 +8,36 @@
 # prob use medium or small scheme, then tlmgr to add anything else I need
 # scheme options are (time estimates are from mybinder.org builds on 20250605):
 #  a [X] full scheme (everything) - about an hour and 10 minutes
-#  b [ ] medium scheme (small + more packages and languages) - about 12 minutes
-#  c [ ] small scheme (basic + xetex, metapost, a few languages) 
-#  d [ ] basic scheme (plain and latex) 
-#  e [ ] minimal scheme (plain only) 
-#  f [ ] infrastructure-only scheme (no TeX at all) 
-#  g [ ] book publishing scheme (core LaTeX and add-ons) 
-#  h [ ] ConTeXt scheme 
-#  i [ ] GUST TeX Live scheme 
-#  j [ ] teTeX scheme (more than medium, but nowhere near full) 
+#  b [ ] medium scheme (small + more packages and languages) - about 12 minutes, 1485 packages
+#  c [ ] small scheme (basic + xetex, metapost, a few languages) - about 3 minutes, 347 packages
+#  d [ ] basic scheme (plain and latex)
+#  e [ ] minimal scheme (plain only)
+#  f [ ] infrastructure-only scheme (no TeX at all)
+#  g [ ] book publishing scheme (core LaTeX and add-ons)
+#  h [ ] ConTeXt scheme
+#  i [ ] GUST TeX Live scheme
+#  j [ ] teTeX scheme (more than medium, but nowhere near full)
 #  k [ ] custom selection of collections
 
 cd /tmp
 wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
-zcat < install-tl-unx.tar.gz | tar xf -
+zcat <install-tl-unx.tar.gz | tar xf -
 cd install-tl-2*
 perl ./install-tl --no-interaction --paper=letter --texdir=/home/jovyan/tex-live --scheme=small
 
-echo "export PATH=/home/jovyan/tex-live/bin/x86_64-linux:$PATH" >> /home/jovyan/.profile
+echo "export PATH=/home/jovyan/tex-live/bin/x86_64-linux:$PATH" >>/home/jovyan/.profile
 source ~/.profile
 
-which xelatex
-which tlmgr
-tlmgr info
+echo "Which xelatex? $(which xelatex)"
+echo "Which tlmgr? $(which tlmgr)"
+echo "Printing installed packages via tlmgr:"
+tlmgr info --only-installed
 
+# packages to install from ctan:
+tlmgr install datetime2 comment cm-super dvipng
+
+# copy in config file which tells the typesetter to run twice (to make table of contents and refs work)
+cp jupyter_notebook_config.py /home/jovyan/.jupyter/
 
 # # this didn't work...
 # # hacky way to 'install' fancyhdr
@@ -47,7 +53,6 @@ tlmgr info
 # tex fancyhdr.ins
 # mv -f fancyhdr.sty fancyheadings.sty extramarks.sty extramarks-v4.sty /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/
 # echo "fancyhdr tex files moved to /usr/share/texlive/texmf-dist/tex/latex/fancyhdr/"
-
 
 # run matplotlib once to generate the font cache
 python -c "import matplotlib as mpl; mpl.use('Agg'); import pylab as plt; fig, ax = plt.subplots(); fig.savefig('test.png')"
