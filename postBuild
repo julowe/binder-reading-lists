@@ -2,12 +2,13 @@
 
 # NOTE: this script is not run as root user
 
+# maybe use https://discourse.jupyter.org/t/how-to-reduce-mybinder-org-repository-startup-time/4956/2 ? to pre-build docker image?
 ## install texlive manually
 # ok so do I just install the full tex and have it take an hour the first time this builds? How long do images stay around on the server? Will I have to wait an hour every 30 days? 7 days?
 # prob use medium or small scheme, then tlmgr to add anything else I need
-# scheme options are:
-#  a [X] full scheme (everything) 
-#  b [ ] medium scheme (small + more packages and languages) 
+# scheme options are (time estimates are from mybinder.org builds on 20250605):
+#  a [X] full scheme (everything) - about an hour and 10 minutes
+#  b [ ] medium scheme (small + more packages and languages) - about 12 minutes
 #  c [ ] small scheme (basic + xetex, metapost, a few languages) 
 #  d [ ] basic scheme (plain and latex) 
 #  e [ ] minimal scheme (plain only) 
@@ -22,11 +23,14 @@ cd /tmp
 wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 zcat < install-tl-unx.tar.gz | tar xf -
 cd install-tl-2*
-perl ./install-tl --no-interaction --paper=letter --texdir=/home/jovyan/tex-live --scheme=medium
-export PATH=/home/jovyan/tex-live/bin/x86_64-linux:$PATH
+perl ./install-tl --no-interaction --paper=letter --texdir=/home/jovyan/tex-live --scheme=small
+
+echo "export PATH=/home/jovyan/tex-live/bin/x86_64-linux:$PATH" >> /home/jovyan/.profile
+source ~/.profile
+
 which xelatex
 which tlmgr
-tlmgr infs
+tlmgr info
 
 
 # # this didn't work...
