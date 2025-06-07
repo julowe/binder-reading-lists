@@ -1,3 +1,4 @@
 dvipng
 ghostscript
 cm-super
+inotify-tools
